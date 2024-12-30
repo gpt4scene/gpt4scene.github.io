@@ -8,7 +8,6 @@ If you find SceneVerse useful for your work please cite:
   journal={arXiv preprint arXiv:2412.XXXX},
   year={2024}
 }
-}
 ```
 
 ## Website License
