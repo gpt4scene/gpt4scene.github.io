@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models">
+  <meta name="keywords" content="Use Video Large language models to under 3D indoor scene.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GPT4Scene</title>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N03WWE2F44"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-N03WWE2F44');
+  </script>
+
+  <!-- imported in PaLM-E -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+  <link rel="stylesheet" href="https://github.com/palm-e/palm-e.github.io/blob/main/css/app.css">
+
+  <link rel="stylesheet" href="https://github.com/palm-e/palm-e.github.io/blob/main/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./static/css/viewer_styles.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+  
+  <script src="https://github.com/palm-e/palm-e.github.io/blob/main/js/app.js"></script>
+
+  <!-- 3D Viewer -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/PLYLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/MTLLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/20.0.0/tween.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/2.3.15/cytoscape.js"></script>
+  <script src="https://unpkg.com/ccapture.js@1.1.0/build/CCapture.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.13.1/core.min.js"></script>
+
+  <!-- imported in Nerfies -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <!-- <link rel="stylesheet" href="./static/css/fontawesome.all.min.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./assets/logo_circle.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <!-- <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" target="_blank" href="https://scene-verse.github.io">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
+
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+          More Research
+          </a>
+          <div class="navbar-dropdown">
+          <a class="navbar-item" target="_blank" href="https://scenediffuser.github.io/">
+              SceneDiffuser
+          </a>
+          <a class="navbar-item" target="_blank" href="https://sqa3d.github.io/">
+              SQA3D
+          </a>
+          <a class="navbar-item" target="_blank" href="https://arnold-benchmark.github.io/">
+              ARNOLD
+          </a>
+          <a class="navbar-item" target="_blank" href="https://3d-vista.github.io/">
+              3D-VisTA
+          </a>
+          <a class="navbar-item" target="_blank" href="https://embodied-generalist.github.io/">
+              LEO
+          </a>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <!-- need changing -->
+            <img src="assets/logo.png" width="50%" style="margin:0 0 30px 0" >
+            <h1 class="title is-1 publication-title">GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a target="_blank" href="https://github.com/Qi-Zhangyang">Zhangyang Qi</a><sup>1,2,✶</sup>,</span>
+              <span class="author-block">
+                <a target="_blank" href="https://github.com/rookiexiong7">Zhixiong Zhang</a><sup>2,✶</sup>,</span>
+              <span class="author-block">
+                <a target="_blank" href="https://github.com/Aleafy">Ye Fang</a>2,</span>
+              <span class="author-block">
+                <a target="_blank" href="https://myownskyw7.github.io/">Jiaqi Wang</a><sup>2,&#x2020;</sup>,</span>
+              <span class="author-block">
+                <a target="_blank" href="https://i.cs.hku.hk/~hszhao/index.html">Hengshuang Zhao</a><sup>1, &#x2020;</sup>,</span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>The University of Hong Kong,  <sup>2</sup>Shanghai AI Laboratory</span>
+            </div>
+
+            <p style="font-size: 0.9em; padding: 0.5em 0 0 0;">✶ indicates equal contribution. &#x2020; indicates Corresponding Author</p>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- Arxiv Link. need changing -->
+                <span class="link-block">
+                  <a target="_blank" href="https://arxiv.org/abs/2401.XXXXX"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Video Link. -->
+                <!-- <span class="link-block">
+                  <a target="_blank" href="https://youtu.be/UnujS0EVxKU"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fab fa-youtube"></i>
+                    </span>
+                    <span>Video</span>
+                  </a>
+                </span> -->
+                
+                <!-- Code Link. need changing -->
+                <span class="link-block">
+                  <a target="_blank" href="https://github.com/Qi-Zhangyang/gpt4scene"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                        <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code (Coming Soon)</span>
+                    </a>
+                </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+
+      <div class="subtitle has-text-justified">
+        <p>
+        <b>TL;DR</b> <h3 style="font-size: 28px; font-weight: bold;">Using only egocentric video input, we achieve SOTA performance across all 3D language models without relying on point clouds.</h3>
+
+        </p>
+        <br>
+        <!-- <img src="assets/overview.png" width="100%"> -->
+        <br>
+      </div>
+
+      <!-- Paper video -->
+      <!-- <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="publication-video">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/UnujS0EVxKU"
+            title="YouTube video player" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+          </div>
+        </div>
+      </div> -->
+      <!--/ Paper video -->
+
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              In recent years, 2D Vision-Language Models (VLMs) have made significant strides in image-text understanding tasks. However, their performance in 3D spatial comprehension, critical for embodied intelligence, remains limited. 
+              Recent advances have leveraged point clouds and multi-view images as inputs, yielding promising results. 
+              However, <b>we propose exploring a purely vision-based solution inspired by human perception, which merely relies on visual cues for 3D spatial understanding. </b>
+              This paper empirically investigates the limitations of VLMs in 3D spatial understanding, revealing that their primary shortcoming lies in the lack of global-local correspondence between the scene and individual frames.
+              To address this, we introduce GPT4Scene, a novel visual prompting paradigm in VLM training and inference that helps build the global-local relationship, significantly improving the 3D spatial understanding of indoor scenes. 
+              Specifically, GPT4Scene constructs a 3D Bird's Eye View (BEV) image from the video and marks consistent object IDs across both frames and the BEV image. The model then inputs the concatenated BEV image and video frames with markers. 
+              In zero-shot evaluations, GPT4Scene improves performance over closed-source VLMs like GPT-4o.
+              Additionally, we prepare a processed training dataset consisting of 165K text annotation to fine-tune an open-source model, achieving state-of-the-art performance on 3D QA tasks with Qwen2-VL (GPT4Scene). 
+              Surprisingly, after training with the GPT4Scene paradigm, VLMs consistently improve during inference, even without visual prompting and BEV image. This demonstrates the proposed paradigm helps VLMs develop an intrinsic ability to understand 3D scenes. 
+              This paves the way for a non-invasive approach to extend pretrained VLMs for 3D scene understanding.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+
+    </div>
+  </section>
+
+
+  <section class="section">
+    <div class="container is-max-desktop">
+
+      <!-- Teaser -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Overview</h2>
+
+          <div class="content has-text-justified">
+            <p>
+              <b>The overall architecture of GPT4Scene.</b> It is capable of understanding 3D scenes and performing tasks such as 3D question
+              answering, dense captioning, and visual grounding using only video input. In contrast to 3D point LLMs, GPT4Scene takes input solely
+              from the vision modality, with global information provided by the BEV image reconstructed from the 3D structure derived from the video.
+            </p>
+          </div>
+          <div style="width: 100%; margin: 0 auto;">
+              <img src="assets/teaser.png" width="100%">
+          </div>
+
+        </div>
+      </div>
+      <!--/ Data -->
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+
+      <!-- Model Architecture -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Pipeline and Model Architecture</h2>
+
+          <div class="content has-text-justified">
+            <p>
+              <b>The Framework of GPT4Scene.</b> A scene video is processed by sampling frames, reconstructing a point cloud, and generating a
+              BEV image. Object locations are detected from the point cloud and projected onto the video frames. The resulting frames and BEV image,
+              enhanced with STO-Markers, are then used as inputs for VLM training and inference.
+            </p>
+          </div>
+          <div style="width: 100%; margin: 0 auto;">
+              <img src="assets/training_process.png" width="100%">
+          </div>
+
+        </div>
+      </div>
+      <!--/ Data -->
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+
+      <!-- Model Architecture -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Experiments Results</h2>
+
+          <h3 class="title is-5">3D Question Answering</h3>
+          <div style="width: 100%; margin: 0 auto;">
+              <img src="assets/3dqa.png" width="100%">
+          </div>
+
+          <div class="content has-text-justified">
+            <p>
+              <b>Evaluation of 3D Question Answering on ScanQA and SQA3D datasets.</b> GPT-4o (GPT4Scene) in the zero-shot setting
+              outperforms most 3D LLM models. Fine-tuned with GPT4Scene, Qwen2-VL achieves state-of-the-art. The base setting uses
+              N = 8 frames at 128 × 123, ”HD” increases resolution to 512 × 490, and ”HDM” combines this resolution with N = 32 frames.
+            </p>
+          </div>
+
+        </div>
+      </div>
+      <!--/ Data -->
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+    <!-- Model -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h3 class="title is-5">3D Dense Caption & 3D Visual Grounding</h3>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <div class="column">
+        <img src="assets/3d_dense_caption.png" width="100%">
+      </div>
+      <div class="column">
+        <div class="content has-text-justified">
+          <p>
+            <b>Evaluation of 3D Dense Caption and 3D Visual Grounding</b> Our results outperform all existing 3D LLM based models and 
+            this proves that indoor scenes can be understood using only the visual modality, without the 3D point clouds.
+          </p>
+          <img src="assets/3d_visual_grounding.png" width="100%">
+        </div>
+      </div>
+    </div>
+    <!--/ Model -->
+    
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code class="language-bibtex">@article{GPT4Scene,
+  title={GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models},
+  author={Zhangyang Qi and Zhixiong Zhang and Ye Fang and Jiaqi Wang and Hengshuang Zhao},
+  journal={arXiv preprint arXiv:2412.XXXX},
+  year={2024}
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+        <p>
+          This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+          Commons Attribution-ShareAlike 4.0 International License</a>.
+        </p>
+        <p>
+            Website template adapted from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+        </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="./static/js/viewer.js"></script>
+
+</body>
+</html>
