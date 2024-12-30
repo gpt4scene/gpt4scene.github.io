@@ -1,14 +1,13 @@
-# SceneVerse: Scaling 3D Vision-Language Learning for Grounded Scene Understanding
-
-This is the repository that contains source code for the [SceneVerse website](https://scene-verse.github.io/).
+# GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models
 
 If you find SceneVerse useful for your work please cite:
 ```bibtex
-@article{jia2024sceneverse,
-  title={SceneVerse: Scaling 3D Vision-Language Learning for Grounded Scene Understanding},
-  author={Jia, Baoxiong and Chen, Yixin and Yu, Huangyue and Wang, Yan and Niu, Xuesong and Liu, Tengyu and Li, Qing and Huang, Siyuan},
-  journal={arXiv},
+@article{GPT4Scene,
+  title={GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models},
+  author={Zhangyang Qi and Zhixiong Zhang and Ye Fang and Jiaqi Wang and Hengshuang Zhao},
+  journal={arXiv preprint arXiv:2412.XXXX},
   year={2024}
+}
 }
 ```
 
