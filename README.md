@@ -5,7 +5,7 @@ If you find SceneVerse useful for your work please cite:
 @article{GPT4Scene,
   title={GPT4Scene: Understand 3D Scenes from Videos with Vision-Language Models},
   author={Zhangyang Qi and Zhixiong Zhang and Ye Fang and Jiaqi Wang and Hengshuang Zhao},
-  journal={arXiv preprint arXiv:2412.XXXX},
+  journal={arXiv preprint arXiv:2501.01428},
   year={2024}
 }
 ```
